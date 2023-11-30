@@ -12,7 +12,11 @@ Otherwise, the utility uses libraries that are part of the Python [standard libr
 
 ### Details
 
-Place the utility file in a directory where one of its subfolders contains all the profile validation resources you'd like to bundle. Follow the prompts once you trigger the script to enter the path to those resources relative to the CWD of the utility file. Once run, a new folder will be created in the utility file's CWD along with the bundled output.
+You'll need to run the utility with these input arguments:
+
+- `--input-dir`: the directory containing all of the loose FHIR profile validation resource JSONs.
+- `--output-dir`: the directory into which to output the bundle of profile validation resources.
+- `--generate_global_array`: optional boolean flag to indicate whether or not you'd like the utility to populate the `global` array in the `ImplementationGuide` resource containing references to all `StructureDefinition` resources in the inputs, which is [needed by the Google Cloud Healthcare API](https://cloud.google.com/healthcare-api/docs/how-tos/fhir-profiles#configure_your_implementation_guide). The default value is True. If you've already done this yourself, you can pass `--no-generate_global_array`.
 
 ### Feedback/contributions
 
