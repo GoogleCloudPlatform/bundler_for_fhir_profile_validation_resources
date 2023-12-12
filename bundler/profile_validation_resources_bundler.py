@@ -133,17 +133,20 @@ class FhirProfileValidationResourcesBundler:
 
     Returns:
       A FHIR transaction bundle containing all the profile validation resources.
-    """
-    for child in os.listdir(source_dir):
-      global_array = []
-      bundle_entries = []
-      bundle = {
-          'resourceType': 'Bundle',
-          'type': 'transaction',
-          'entry': bundle_entries,
-      }
-      ig_resource = {}
 
+    Raises:
+      ValueError: if the input directory does not contain an ImplementationGuide
+      resource.
+    """
+    global_array = []
+    bundle_entries = []
+    bundle = {
+        'resourceType': 'Bundle',
+        'type': 'transaction',
+        'entry': bundle_entries,
+    }
+    ig_resource = {}
+    for child in os.listdir(source_dir):
       file_path = os.path.join(source_dir, child)
       if os.path.isfile(file_path):
         with open(file_path, 'r') as f:
@@ -157,12 +160,16 @@ class FhirProfileValidationResourcesBundler:
             bundle_entries.append(bundle_entry)
           else:
             ig_resource = resource
-
-          ig_bundle_entry = self.ProcessImplementationGuideResource(
-              ig_resource, do_construct_global_array, global_array
-          )
-          bundle_entries.append(ig_bundle_entry)
-          return bundle
+    if not ig_resource:
+      raise ValueError(
+          'An ImplementationGuide resource was not provided in the input'
+          ' directory.'
+      )
+    ig_bundle_entry = self.ProcessImplementationGuideResource(
+        ig_resource, do_construct_global_array, global_array
+    )
+    bundle_entries.append(ig_bundle_entry)
+    return bundle
 
   def ProcessProfileValidationResource(
       self, resource, do_construct_global_array, global_array
