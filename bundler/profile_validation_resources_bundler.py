@@ -207,10 +207,24 @@ class FhirProfileValidationResourcesBundler:
 
     # Refer to cloud.google.com/healthcare-api/docs/how-tos/fhir-profiles
     if do_construct_global_array and resource_type == 'StructureDefinition':
-      sd_targeted_resource_type = resource['type']
-      global_array.append(
-          {'type': sd_targeted_resource_type, 'profile': resource_url}
-      )
+      sd_kind = resource['kind']
+      if sd_kind == 'resource':
+        sd_targeted_resource_type = resource['type']
+        global_array.append(
+            {'type': sd_targeted_resource_type, 'profile': resource_url}
+        )
+      else:
+        print(f"""
+          Non-resource-based StructureDefinition found:
+
+          StructureDefinition URL: {resource['url']}
+          StructureDefinition kind: {sd_kind}
+          StructureDefinition type: {resource['type']}
+
+          Please note that only resource-based StructureDefinitions (of
+          'kind'='resource') can be referred to by the ImplementationGuide. This
+          will be skipped. Refer to "Usage notes" in the README for more info.
+        """)
     resource_bundle_entry = {
         'resource': resource,
         'fullUrl': resource_uuid,
