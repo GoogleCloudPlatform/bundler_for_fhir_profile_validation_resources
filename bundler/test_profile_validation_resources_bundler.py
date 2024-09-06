@@ -114,6 +114,7 @@ class TestFhirProfileValidationResourcesBundler(unittest.TestCase):
         'id': 'sd-1',
         'version': '1.0.0',
         'type': 'Patient',
+        'kind': 'resource',
     }
     _, global_array = self.bundler.ProcessProfileValidationResource(
         resource, True, []
@@ -125,6 +126,33 @@ class TestFhirProfileValidationResourcesBundler(unittest.TestCase):
         },
         global_array,
         'Given IG global reference not found in the global array',
+    )
+
+  def test_process_profile_validation_resource_ignores_non_resource_structuredefinition(
+      self,
+  ):
+    """Test non-resource StructureDefinitions are still linked if the user provides a resource type."""
+    resource = {
+        'resourceType': 'StructureDefinition',
+        'url': (
+            'http://www.hl7.org/some/structure/definition/resource/for/range'
+        ),
+        'id': 'sd-1',
+        'version': '1.0.0',
+        'type': 'Range',
+        'kind': 'complex-type',
+    }
+    _, global_array = self.bundler.ProcessProfileValidationResource(
+        resource, True, []
+    )
+    self.assertNotIn(
+        {
+            'type': 'Range',
+            'profile': 'http://www.hl7.org/some/structure/definition/resource/for/range',
+        },
+        global_array,
+        "Given IG global reference found in the global array when it's not "
+        + 'supposed to be there',
     )
 
   def test_process_profile_validation_resource_does_not_populate_global_array_not_structuredefinition(
