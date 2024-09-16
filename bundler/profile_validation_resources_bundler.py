@@ -103,7 +103,7 @@ class FhirProfileValidationResourcesBundler:
       source_dir = os.path.join(os.getcwd(), os.path.relpath(ig_folder))
 
     if not os.path.exists(source_dir):
-      raise ValueError('Given directory does not exist!')
+      raise ValueError(f'Given input directory {source_dir} does not exist!')
 
     bundle_dest_folder = args.output_dir
     is_bundle_dest_dir_abs_path = os.path.isabs(bundle_dest_folder)
