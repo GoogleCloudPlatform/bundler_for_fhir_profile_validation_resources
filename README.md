@@ -25,3 +25,23 @@ We welcome any help with improving the tool! Please see the CONTRIBUTING file fo
 ## License
 
 Apache License, Version 2.0
+
+## Usage notes
+
+- The implementation guide feature in Google Cloud Healthcare FHIR stores are
+  used for *profile validation*. If you try to create a bundle from a guide
+  package that contains a purely descriptive `ImplementationGuide` (i.e. one
+  that solely provides textual information without any associated validation
+  resources like `StructureDefinition`s, `ValueSet`s, etc.), it will not have
+  much effect after upload into a FHIR store.
+- `ImplemenationGuide`s may contain `StructureDefinition`s that should not be
+  applied to all resources, either because they do not describe a resource
+  (`StructureDefinition`s for FHIR data types), or they only apply in specific
+  scenarios. To distinguish between these different use cases, the FHIR store
+  uses the `ImplementationGuide.global` field to identify resource profiles that
+  all incoming resources should be validated against.
+
+  The bundler will help you assemble resource-based `StructureDefinition`s into
+  the `ImplementationGuide.global` field, should you instruct it to. You will
+  have to ensure other `StructureDefinition`s are referenced appropriately
+  according to your use case.
