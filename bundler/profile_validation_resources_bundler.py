@@ -151,7 +151,12 @@ class FhirProfileValidationResourcesBundler:
       if os.path.isfile(file_path):
         with open(file_path, 'r') as f:
           resource = json.load(f)
-          resource_type = resource['resourceType']
+          resource_type = resource.get('resourceType', None)
+          if not resource_type:
+            raise ValueError(
+                f'Resource type not found in resource file: {file_path}. Is'
+                ' this file actually a FHIR resource?'
+            )
           if resource_type != 'ImplementationGuide':
             # Process these first
             bundle_entry, global_array = self.ProcessProfileValidationResource(
