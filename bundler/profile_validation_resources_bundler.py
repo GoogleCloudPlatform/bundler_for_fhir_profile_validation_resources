@@ -215,8 +215,13 @@ class FhirProfileValidationResourcesBundler:
       sd_kind = resource['kind']
       if sd_kind == 'resource':
         sd_targeted_resource_type = resource['type']
+        maybe_versioned_url = (
+            resource_url + '|' + resource_version
+            if resource_version
+            else resource_url
+        )
         global_array.append(
-            {'type': sd_targeted_resource_type, 'profile': resource_url}
+            {'type': sd_targeted_resource_type, 'profile': maybe_versioned_url}
         )
       else:
         print(f"""
