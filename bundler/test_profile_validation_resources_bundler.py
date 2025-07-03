@@ -122,7 +122,9 @@ class TestFhirProfileValidationResourcesBundler(unittest.TestCase):
     self.assertIn(
         {
             'type': 'Patient',
-            'profile': 'http://www.hl7.org/some/structure/definition/resource/for/patient',
+            'profile': (
+                'http://www.hl7.org/some/structure/definition/resource/for/patient|1.0.0'
+            ),
         },
         global_array,
         'Given IG global reference not found in the global array',
@@ -148,7 +150,9 @@ class TestFhirProfileValidationResourcesBundler(unittest.TestCase):
     self.assertNotIn(
         {
             'type': 'Range',
-            'profile': 'http://www.hl7.org/some/structure/definition/resource/for/range',
+            'profile': (
+                'http://www.hl7.org/some/structure/definition/resource/for/range',
+            ),
         },
         global_array,
         "Given IG global reference found in the global array when it's not "
